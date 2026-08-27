@@ -1,0 +1,20 @@
+{
+  "subreddit": "kolkata",
+  "collected_at": "2026-08-27T08:48:26.545466+00:00",
+  "source": "derived_from_posts_dataset",
+  "created_utc": null,
+  "description": "A vibrant community celebrating the essence of Kolkata, with a focus on content related to West Bengal or the Bengali community of India or abroad.",
+  "about_markdown": null,
+  "subscribers": 470957,
+  "subreddit_rank": {
+    "community_rank_type": null,
+    "community_rank_value": null
+  },
+  "rules": [],
+  "post_flairs": [],
+  "moderators": [],
+  "pinned_posts": [],
+  "moderator_announcements": [],
+  "raw_about_response": null,
+  "notes": "Reddit public about.json unreachable (HTTP 403 from this environment as of 2026-08-27). Rules unavailable (public rules.json blocked or subreddit has none). Moderator list unavailable (public moderators.json blocked or empty)."
+}

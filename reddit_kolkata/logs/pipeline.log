@@ -1,0 +1,48 @@
+2026-08-27 13:32:01,225 ERROR reddit_kolkata.collection_code.brightdata_client: BrightData trigger failed (400): Customer is not active
+2026-08-27 13:34:08,491 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtb8l4gn2476twssdc on dataset gd_lvz8ah06191smkebj4
+2026-08-27 13:46:52,130 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 2 records from snapshot sd_mtb8l4gn2476twssdc
+2026-08-27 13:47:09,567 INFO reddit_kolkata.collection_code.build_monthly_activity: === kolkata: collecting posts 2025-04-01 to 2026-08-27 ===
+2026-08-27 13:47:10,640 INFO reddit_kolkata.collection_code.build_monthly_activity: Triggered snapshot sd_mtb91w0vqi4vplh8l on dataset gd_lvz8ah06191smkebj4
+2026-08-27 13:47:23,580 INFO reddit_kolkata.collection_code.build_monthly_activity: Downloaded 0 records from snapshot sd_mtb91w0vqi4vplh8l
+2026-08-27 13:47:23,581 WARNING reddit_kolkata.collection_code.build_monthly_activity: Dated request for kolkata returned 0 records (start_date=2025-04-01) -- falling back to one bare full-history request.
+2026-08-27 13:47:24,602 INFO reddit_kolkata.collection_code.build_monthly_activity: Triggered snapshot sd_mtb926sn1hnrvwa2pe on dataset gd_lvz8ah06191smkebj4
+2026-08-27 14:00:55,173 INFO reddit_kolkata.collection_code.build_monthly_activity: Downloaded 2 records from snapshot sd_mtb926sn1hnrvwa2pe
+2026-08-27 14:03:43,401 INFO __main__: === kolkata: collecting posts 2025-04-01 to 2026-08-27 ===
+2026-08-27 14:03:44,527 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtb9n6wz1eag9sizo4 on dataset gd_lvz8ah06191smkebj4
+2026-08-27 14:03:58,086 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 0 records from snapshot sd_mtb9n6wz1eag9sizo4
+2026-08-27 14:03:58,086 WARNING reddit_kolkata.collection_code.collect_posts: Dated request for kolkata returned 0 records (start_date=2025-04-01) -- falling back to one bare full-history request.
+2026-08-27 14:04:02,302 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtb9nkmj16drvejddk on dataset gd_lvz8ah06191smkebj4
+2026-08-27 14:17:56,823 WARNING reddit_kolkata.collection_code.brightdata_client: Snapshot sd_mtb9nkmj16drvejddk attempt 1/5 returned malformed content (not a list-of-dicts, len=2) -- retrying in 15s, likely not fully materialized yet.
+2026-08-27 14:18:26,432 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 993 records from snapshot sd_mtb9nkmj16drvejddk
+2026-08-27 14:18:26,540 INFO reddit_kolkata.collection_code.collect_posts: Bare full-history fallback for kolkata appended 993 records across 17 months.
+2026-08-27 14:18:26,545 INFO __main__: posts {'status': 'complete', 'subreddit': 'kolkata', 'month': 'ALL', 'records': 993, 'snapshot_id': 'sd_mtb9nkmj16drvejddk'}
+2026-08-27 14:18:26,545 INFO __main__: === kolkata: collecting subreddit metadata ===
+2026-08-27 14:18:28,868 WARNING reddit_kolkata.collection_code.reddit_public_client: Reddit public endpoint https://www.reddit.com/r/kolkata/about.json returned 403
+2026-08-27 14:18:31,561 WARNING reddit_kolkata.collection_code.reddit_public_client: Reddit public endpoint https://www.reddit.com/r/kolkata/about/rules.json returned 403
+2026-08-27 14:18:33,855 WARNING reddit_kolkata.collection_code.reddit_public_client: Reddit public endpoint https://www.reddit.com/r/kolkata/about/moderators.json returned 403
+2026-08-27 14:18:36,134 WARNING reddit_kolkata.collection_code.reddit_public_client: Reddit public endpoint https://www.reddit.com/r/kolkata/hot.json?limit=25 returned 403
+2026-08-27 14:18:36,222 INFO reddit_kolkata.collection_code.collect_subreddit_metadata: Wrote subreddit metadata snapshot for kolkata to /Users/harshalshah05/Documents/4-1 SEM/Project/reddit_kolkata/subreddit_metadata/kolkata_2026-08-27.json
+2026-08-27 14:18:36,222 INFO __main__: === kolkata: collecting comments 2025-04-01 to 2026-08-27 ===
+2026-08-27 14:18:38,420 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtba6cj62frexg684u on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:25:19,966 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 778 records from snapshot sd_mtba6cj62frexg684u
+2026-08-27 14:25:20,993 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbaez9q2hxvguxurd on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:32:54,878 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 569 records from snapshot sd_mtbaez9q2hxvguxurd
+2026-08-27 14:32:55,914 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbaoqapnun5y7eu on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:38:49,231 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 240 records from snapshot sd_mtbaoqapnun5y7eu
+2026-08-27 14:38:50,846 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbawc5t2axw1ni6c2 on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:44:47,576 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 302 records from snapshot sd_mtbawc5t2axw1ni6c2
+2026-08-27 14:44:48,676 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbb409m1euit57zvs on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:47:18,055 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 259 records from snapshot sd_mtbb409m1euit57zvs
+2026-08-27 14:47:19,166 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbb78et1uo79ga6be on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:49:19,031 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 553 records from snapshot sd_mtbb78et1uo79ga6be
+2026-08-27 14:49:20,104 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbb9tq623qry2ws2a on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:52:19,487 INFO reddit_kolkata.collection_code.brightdata_client: Downloaded 375 records from snapshot sd_mtbb9tq623qry2ws2a
+2026-08-27 14:52:20,517 INFO reddit_kolkata.collection_code.brightdata_client: Triggered snapshot sd_mtbbdoxw22ah8yw20u on dataset gd_lvzdpsdlw09j6t702
+2026-08-27 14:56:32,723 INFO reddit_kolkata.collection_code.process_posts: Wrote 993 posts to processed/posts.csv
+2026-08-27 14:56:32,724 INFO reddit_kolkata.collection_code.process_posts: Wrote 0 crossposts to processed/crossposts.csv
+2026-08-27 14:56:32,780 INFO reddit_kolkata.collection_code.process_comments: Wrote 4633 comments to processed/comments.csv
+2026-08-27 14:56:32,876 INFO reddit_kolkata.collection_code.build_users: Wrote 2503 users to processed/users.csv
+2026-08-27 14:56:32,920 INFO reddit_kolkata.collection_code.build_monthly_activity: Wrote 1 monthly_activity rows to processed/monthly_activity.csv
+2026-08-27 14:56:32,989 INFO reddit_kolkata.collection_code.process_posts: Wrote 993 posts to processed/posts.csv
+2026-08-27 14:56:32,990 INFO reddit_kolkata.collection_code.process_posts: Wrote 0 crossposts to processed/crossposts.csv
+2026-08-27 14:56:33,045 INFO reddit_kolkata.collection_code.process_comments: Wrote 4633 comments to processed/comments.csv

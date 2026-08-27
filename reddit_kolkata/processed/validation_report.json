@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-08-27T09:26:33.045542+00:00",
+  "subreddits": {
+    "kolkata": {
+      "subreddit": "kolkata",
+      "total_posts": 993,
+      "total_comments": 4633,
+      "unique_authors": 2503,
+      "earliest_post": "2026-08-18T11:14:35.784Z",
+      "latest_post": "2026-08-27T08:31:10.000Z",
+      "cross_posts": 0,
+      "posts_with_external_urls": 21,
+      "deleted_removed_posts": 0,
+      "deleted_removed_comments": 42,
+      "missing_periods": [
+        "2026-08 (posts: partial)",
+        "2026-08 (comments: never_attempted)"
+      ]
+    },
+    "kolkatacity": {
+      "subreddit": "kolkatacity",
+      "total_posts": 0,
+      "total_comments": 0,
+      "unique_authors": 0,
+      "earliest_post": null,
+      "latest_post": null,
+      "cross_posts": 0,
+      "posts_with_external_urls": 0,
+      "deleted_removed_posts": 0,
+      "deleted_removed_comments": 0,
+      "missing_periods": [
+        "2025-04 (posts: never_attempted)",
+        "2025-04 (comments: never_attempted)",
+        "2025-05 (posts: never_attempted)",
+        "2025-05 (comments: never_attempted)",
+        "2025-06 (posts: never_attempted)",
+        "2025-06 (comments: never_attempted)",
+        "2025-07 (posts: never_attempted)",
+        "2025-07 (comments: never_attempted)",
+        "2025-08 (posts: never_attempted)",
+        "2025-08 (comments: never_attempted)",
+        "2025-09 (posts: never_attempted)",
+        "2025-09 (comments: never_attempted)",
+        "2025-10 (posts: never_attempted)",
+        "2025-10 (comments: never_attempted)",
+        "2025-11 (posts: never_attempted)",
+        "2025-11 (comments: never_attempted)",
+        "2025-12 (posts: never_attempted)",
+        "2025-12 (comments: never_attempted)",
+        "2026-01 (posts: never_attempted)",
+        "2026-01 (comments: never_attempted)",
+        "2026-02 (posts: never_attempted)",
+        "2026-02 (comments: never_attempted)",
+        "2026-03 (posts: never_attempted)",
+        "2026-03 (comments: never_attempted)",
+        "2026-04 (posts: never_attempted)",
+        "2026-04 (comments: never_attempted)",
+        "2026-05 (posts: never_attempted)",
+        "2026-05 (comments: never_attempted)",
+        "2026-06 (posts: never_attempted)",
+        "2026-06 (comments: never_attempted)",
+        "2026-07 (posts: never_attempted)",
+        "2026-07 (comments: never_attempted)",
+        "2026-08 (posts: never_attempted)",
+        "2026-08 (comments: never_attempted)"
+      ]
+    }
+  },
+  "duplicate_post_ids": [],
+  "duplicate_comment_ids": [],
+  "collection_failures": [
+    {
+      "subreddit": "kolkata",
+      "data_type": "posts",
+      "month": "2026-08",
+      "period_start": "2026-08-01",
+      "period_end": "2026-08-27",
+      "status": "partial",
+      "snapshot_id": "sd_mtb9nkmj16drvejddk",
+      "records_collected": "993",
+      "last_attempt_at": "2026-08-27T08:48:26.540056+00:00",
+      "error_message": NaN
+    }
+  ]
+}
