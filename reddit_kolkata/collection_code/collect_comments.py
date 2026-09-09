@@ -31,7 +31,7 @@ def post_ids_and_urls_for_month(subreddit: str, month: str) -> list[tuple[str, s
 def already_covered_post_ids(subreddit: str, month: str) -> set:
     slug = config.slugify(subreddit)
     path = config.RAW_DIR / slug / month / "comments.jsonl"
-    return {rec.get("parent_comment_id") for rec in jsonl_utils.read_jsonl(path) if rec.get("parent_comment_id")}
+    return {rec.get("post_id") for rec in jsonl_utils.read_jsonl(path) if rec.get("post_id")}
 
 
 def batch(items: list, size: int):

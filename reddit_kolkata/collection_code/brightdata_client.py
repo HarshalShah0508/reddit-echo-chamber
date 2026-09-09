@@ -25,7 +25,35 @@ logger = get_logger(__name__)
 
 
 def _headers() -> dict:
-    return {"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}", "Content-Type": "application/json"}
+    return {
+        "Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}",
+        "Content-Type": "application/json",
+        "Connection": "close",
+    }
+
+
+def _request_with_retry(method: str, url: str, max_attempts: int = 4, **kwargs) -> requests.Response:
+    """requests/urllib3 pools keep-alive connections per host; BrightData's side has been
+    observed to reset those connections after a short idle gap (e.g. between 10s poll
+    ticks), which surfaces as ConnectionResetError on an otherwise-healthy network path
+    (plain curl calls to the same host never reproduce it). Retrying a fresh connection
+    clears it every time, so treat it as transient rather than a real failure.
+    """
+    last_exc: Exception | None = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return requests.request(method, url, **kwargs)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as exc:
+            last_exc = exc
+            if attempt == max_attempts:
+                break
+            delay = 2 * attempt
+            logger.warning(
+                "%s %s connection error (attempt %d/%d), retrying in %ds: %s",
+                method, url, attempt, max_attempts, delay, exc,
+            )
+            time.sleep(delay)
+    raise last_exc
 
 
 def trigger_snapshot(dataset_id: str, payload: list[dict], discover_by: str | None = None) -> str:
@@ -34,7 +62,8 @@ def trigger_snapshot(dataset_id: str, payload: list[dict], discover_by: str | No
         params["type"] = "discover_new"
         params["discover_by"] = discover_by
 
-    response = requests.post(
+    response = _request_with_retry(
+        "post",
         f"{config.BASE_URL}/trigger",
         params=params,
         headers=_headers(),
@@ -59,9 +88,10 @@ def poll_snapshot(
 ) -> str:
     elapsed = 0
     while elapsed < timeout_s:
-        response = requests.get(
+        response = _request_with_retry(
+            "get",
             f"{config.BASE_URL}/progress/{snapshot_id}",
-            headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}"},
+            headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}", "Connection": "close"},
             timeout=60,
         )
         response.raise_for_status()
@@ -90,10 +120,11 @@ def download_snapshot(snapshot_id: str, max_attempts: int = 5, retry_delay_s: in
     """
     last_data = []
     for attempt in range(1, max_attempts + 1):
-        response = requests.get(
+        response = _request_with_retry(
+            "get",
             f"{config.BASE_URL}/snapshot/{snapshot_id}",
             params={"format": "json"},
-            headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}"},
+            headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}", "Connection": "close"},
             timeout=120,
         )
         response.raise_for_status()

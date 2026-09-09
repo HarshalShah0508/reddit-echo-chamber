@@ -1,0 +1,17 @@
+{
+  "subreddit": "kolkatacity",
+  "collected_at": "2026-09-03T07:36:30.353018+00:00",
+  "source": "derived_from_posts_dataset",
+  "created_utc": null,
+  "description": null,
+  "about_markdown": null,
+  "subscribers": null,
+  "subreddit_rank": null,
+  "rules": [],
+  "post_flairs": [],
+  "moderators": [],
+  "pinned_posts": [],
+  "moderator_announcements": [],
+  "raw_about_response": null,
+  "notes": "Reddit public about.json unreachable (HTTP 403 from this environment as of 2026-08-27). Rules unavailable (public rules.json blocked or subreddit has none). Moderator list unavailable (public moderators.json blocked or empty). Description/member count/rank fall back to null: no public API access and no raw posts collected yet."
+}

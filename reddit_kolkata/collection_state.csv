@@ -14,21 +14,60 @@ kolkata,posts,2026-03,2026-03-01,2026-03-31,complete,sd_mtb9nkmj16drvejddk,0,202
 kolkata,posts,2026-04,2026-04-01,2026-04-30,complete,sd_mtb9nkmj16drvejddk,0,2026-08-27T08:48:26.463025+00:00,
 kolkata,posts,2026-05,2026-05-01,2026-05-31,complete,sd_mtb9nkmj16drvejddk,0,2026-08-27T08:48:26.464279+00:00,
 kolkata,posts,2026-06,2026-06-01,2026-06-30,complete,sd_mtb9nkmj16drvejddk,0,2026-08-27T08:48:26.465597+00:00,
-kolkata,posts,2026-07,2026-07-01,2026-07-31,complete,sd_mtb9nkmj16drvejddk,0,2026-08-27T08:48:26.466888+00:00,
-kolkata,posts,2026-08,2026-08-01,2026-08-27,partial,sd_mtb9nkmj16drvejddk,993,2026-08-27T08:48:26.540056+00:00,
-kolkata,comments,2025-04,2025-04-01,2025-04-30,complete,,0,2026-08-27T08:48:36.224741+00:00,
-kolkata,comments,2025-05,2025-05-01,2025-05-31,complete,,0,2026-08-27T08:48:36.227016+00:00,
-kolkata,comments,2025-06,2025-06-01,2025-06-30,complete,,0,2026-08-27T08:48:36.229091+00:00,
-kolkata,comments,2025-07,2025-07-01,2025-07-31,complete,,0,2026-08-27T08:48:36.231150+00:00,
-kolkata,comments,2025-08,2025-08-01,2025-08-31,complete,,0,2026-08-27T08:48:36.233194+00:00,
-kolkata,comments,2025-09,2025-09-01,2025-09-30,complete,,0,2026-08-27T08:48:36.235180+00:00,
-kolkata,comments,2025-10,2025-10-01,2025-10-31,complete,,0,2026-08-27T08:48:36.237156+00:00,
-kolkata,comments,2025-11,2025-11-01,2025-11-30,complete,,0,2026-08-27T08:48:36.239116+00:00,
-kolkata,comments,2025-12,2025-12-01,2025-12-31,complete,,0,2026-08-27T08:48:36.241191+00:00,
-kolkata,comments,2026-01,2026-01-01,2026-01-31,complete,,0,2026-08-27T08:48:36.243216+00:00,
-kolkata,comments,2026-02,2026-02-01,2026-02-28,complete,,0,2026-08-27T08:48:36.245145+00:00,
-kolkata,comments,2026-03,2026-03-01,2026-03-31,complete,,0,2026-08-27T08:48:36.247035+00:00,
-kolkata,comments,2026-04,2026-04-01,2026-04-30,complete,,0,2026-08-27T08:48:36.248938+00:00,
-kolkata,comments,2026-05,2026-05-01,2026-05-31,complete,,0,2026-08-27T08:48:36.250814+00:00,
-kolkata,comments,2026-06,2026-06-01,2026-06-30,complete,,0,2026-08-27T08:48:36.252700+00:00,
-kolkata,comments,2026-07,2026-07-01,2026-07-31,complete,,0,2026-08-27T08:48:36.254622+00:00,
+kolkata,posts,2026-07,2026-07-01,2026-07-31,complete,sd_mtl81cju3ymf7bzyv,0,2026-09-03T08:01:22.923735+00:00,
+kolkata,posts,2026-08,2026-08-01,2026-08-31,complete,sd_mtk6j8ap1997lw8rbs,12,2026-09-02T14:22:23.473547+00:00,
+kolkata,comments,2025-04,2025-04-01,2025-04-30,complete,,0,2026-09-03T07:07:18.598874+00:00,
+kolkata,comments,2025-05,2025-05-01,2025-05-31,complete,,0,2026-09-03T07:07:18.601626+00:00,
+kolkata,comments,2025-06,2025-06-01,2025-06-30,complete,,0,2026-09-03T07:07:18.604214+00:00,
+kolkata,comments,2025-07,2025-07-01,2025-07-31,complete,,0,2026-09-03T07:07:18.606798+00:00,
+kolkata,comments,2025-08,2025-08-01,2025-08-31,complete,,0,2026-09-03T07:07:18.609409+00:00,
+kolkata,comments,2025-09,2025-09-01,2025-09-30,complete,,0,2026-09-03T07:07:18.612041+00:00,
+kolkata,comments,2025-10,2025-10-01,2025-10-31,complete,,0,2026-09-03T07:07:18.614586+00:00,
+kolkata,comments,2025-11,2025-11-01,2025-11-30,complete,,0,2026-09-03T07:07:18.617117+00:00,
+kolkata,comments,2025-12,2025-12-01,2025-12-31,complete,,0,2026-09-03T07:07:18.619634+00:00,
+kolkata,comments,2026-01,2026-01-01,2026-01-31,complete,,0,2026-09-03T07:07:18.622162+00:00,
+kolkata,comments,2026-02,2026-02-01,2026-02-28,complete,,0,2026-09-03T07:07:18.624638+00:00,
+kolkata,comments,2026-03,2026-03-01,2026-03-31,complete,,0,2026-09-03T07:07:18.627112+00:00,
+kolkata,comments,2026-04,2026-04-01,2026-04-30,complete,,0,2026-09-03T07:07:18.629574+00:00,
+kolkata,comments,2026-05,2026-05-01,2026-05-31,complete,,0,2026-09-03T07:07:18.632062+00:00,
+kolkata,comments,2026-06,2026-06-01,2026-06-30,complete,,0,2026-09-03T07:07:18.634548+00:00,
+kolkata,comments,2026-07,2026-07-01,2026-07-31,complete,,0,2026-09-03T07:07:18.637010+00:00,
+kolkata,posts,2026-09,2026-09-01,2026-09-03,partial,sd_mtl698388gu0sb60g,61,2026-09-03T07:06:43.700832+00:00,
+kolkata,comments,2026-08,2026-08-01,2026-08-31,partial,,0,2026-09-02T17:47:04.616568+00:00,
+kolkata,comments,2026-09,2026-09-01,2026-09-30,partial,,0,2026-09-02T17:48:28.152951+00:00,
+kolkatacity,posts,2025-04,2025-04-01,2025-04-01,failed,,,2026-09-03T07:36:30.325903+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-05,2025-05-01,2025-05-01,failed,,,2026-09-03T07:36:30.328207+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-06,2025-06-01,2025-06-01,failed,,,2026-09-03T07:36:30.329672+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-07,2025-07-01,2025-07-01,failed,,,2026-09-03T07:36:30.331133+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-08,2025-08-01,2025-08-01,failed,,,2026-09-03T07:36:30.332579+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-09,2025-09-01,2025-09-01,failed,,,2026-09-03T07:36:30.334230+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-10,2025-10-01,2025-10-01,failed,,,2026-09-03T07:36:30.335695+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-11,2025-11-01,2025-11-01,failed,,,2026-09-03T07:36:30.337085+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2025-12,2025-12-01,2025-12-01,failed,,,2026-09-03T07:36:30.338555+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-01,2026-01-01,2026-01-01,failed,,,2026-09-03T07:36:30.340025+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-02,2026-02-01,2026-02-01,failed,,,2026-09-03T07:36:30.341460+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-03,2026-03-01,2026-03-01,failed,,,2026-09-03T07:36:30.343210+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-04,2026-04-01,2026-04-01,failed,,,2026-09-03T07:36:30.344721+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-05,2026-05-01,2026-05-01,failed,,,2026-09-03T07:36:30.346111+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-06,2026-06-01,2026-06-01,failed,,,2026-09-03T07:36:30.347492+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-07,2026-07-01,2026-07-01,failed,,,2026-09-03T07:36:30.348927+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-08,2026-08-01,2026-08-01,failed,,,2026-09-03T07:36:30.350535+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,posts,2026-09,2026-09-01,2026-09-01,failed,,,2026-09-03T07:36:30.352264+00:00,"HTTPSConnectionPool(host='api.brightdata.com', port=443): Max retries exceeded with url: /datasets/v3/progress/sd_mtl71ysu3b4a48tb5 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1129)')))"
+kolkatacity,comments,2025-04,2025-04-01,2025-04-30,complete,,0,2026-09-03T07:36:30.621960+00:00,
+kolkatacity,comments,2025-05,2025-05-01,2025-05-31,complete,,0,2026-09-03T07:36:30.625548+00:00,
+kolkatacity,comments,2025-06,2025-06-01,2025-06-30,complete,,0,2026-09-03T07:36:30.627990+00:00,
+kolkatacity,comments,2025-07,2025-07-01,2025-07-31,complete,,0,2026-09-03T07:36:30.630292+00:00,
+kolkatacity,comments,2025-08,2025-08-01,2025-08-31,complete,,0,2026-09-03T07:36:30.632564+00:00,
+kolkatacity,comments,2025-09,2025-09-01,2025-09-30,complete,,0,2026-09-03T07:36:30.634834+00:00,
+kolkatacity,comments,2025-10,2025-10-01,2025-10-31,complete,,0,2026-09-03T07:36:30.637091+00:00,
+kolkatacity,comments,2025-11,2025-11-01,2025-11-30,complete,,0,2026-09-03T07:36:30.639504+00:00,
+kolkatacity,comments,2025-12,2025-12-01,2025-12-31,complete,,0,2026-09-03T07:36:30.642407+00:00,
+kolkatacity,comments,2026-01,2026-01-01,2026-01-31,complete,,0,2026-09-03T07:36:30.644905+00:00,
+kolkatacity,comments,2026-02,2026-02-01,2026-02-28,complete,,0,2026-09-03T07:36:30.647222+00:00,
+kolkatacity,comments,2026-03,2026-03-01,2026-03-31,complete,,0,2026-09-03T07:36:30.649516+00:00,
+kolkatacity,comments,2026-04,2026-04-01,2026-04-30,complete,,0,2026-09-03T07:36:30.651750+00:00,
+kolkatacity,comments,2026-05,2026-05-01,2026-05-31,complete,,0,2026-09-03T07:36:30.653975+00:00,
+kolkatacity,comments,2026-06,2026-06-01,2026-06-30,complete,,0,2026-09-03T07:36:30.656301+00:00,
+kolkatacity,comments,2026-07,2026-07-01,2026-07-31,complete,,0,2026-09-03T07:36:30.658673+00:00,
+kolkatacity,comments,2026-08,2026-08-01,2026-08-31,complete,,0,2026-09-03T07:36:30.661337+00:00,
+kolkatacity,comments,2026-09,2026-09-01,2026-09-30,complete,,0,2026-09-03T07:36:30.663805+00:00,
