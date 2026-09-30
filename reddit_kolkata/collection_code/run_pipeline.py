@@ -17,7 +17,9 @@ from . import date_utils
 from .build_monthly_activity import build_monthly_activity_table
 from .build_users import build_users_table
 from .collect_comments import collect_comments_for_range
+from .collect_comments_arcticshift import collect_comments_for_range as collect_comments_for_range_as
 from .collect_posts import collect_posts_for_range
+from .collect_posts_arcticshift import collect_posts_for_range as collect_posts_for_range_as
 from .collect_subreddit_metadata import collect_subreddit_metadata
 from .log_utils import get_logger
 from .process_comments import build_comments_table
@@ -36,14 +38,23 @@ def main():
     parser.add_argument("--skip-metadata", action="store_true")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--batch-size", type=int, default=None)
+    parser.add_argument(
+        "--source", choices=["brightdata", "arcticshift"], default="brightdata",
+        help="Data source for posts/comments collection. 'arcticshift' uses the no-key "
+             "arctic-shift.photon-reddit.com archive API instead of BrightData -- useful "
+             "when BrightData is unreachable (e.g. inactive account, network TLS blocks).",
+    )
     args = parser.parse_args()
 
     start = date_utils.parse_date(args.start_date)
     end = date_utils.parse_date(args.end_date) if args.end_date else date_utils.today_utc()
 
     for subreddit in args.subreddit:
-        logger.info("=== %s: collecting posts %s to %s ===", subreddit, start, end)
-        post_results = collect_posts_for_range(subreddit, start, end, force=args.force)
+        logger.info("=== %s: collecting posts %s to %s (source=%s) ===", subreddit, start, end, args.source)
+        if args.source == "arcticshift":
+            post_results = collect_posts_for_range_as(subreddit, start, end, force=args.force)
+        else:
+            post_results = collect_posts_for_range(subreddit, start, end, force=args.force)
         for r in post_results:
             logger.info("posts %s", r)
 
@@ -52,11 +63,14 @@ def main():
             collect_subreddit_metadata(subreddit)
 
         if not args.skip_comments:
-            logger.info("=== %s: collecting comments %s to %s ===", subreddit, start, end)
-            kwargs = {"force": args.force}
-            if args.batch_size:
-                kwargs["batch_size"] = args.batch_size
-            comment_results = collect_comments_for_range(subreddit, start, end, **kwargs)
+            logger.info("=== %s: collecting comments %s to %s (source=%s) ===", subreddit, start, end, args.source)
+            if args.source == "arcticshift":
+                comment_results = collect_comments_for_range_as(subreddit, start, end, force=args.force)
+            else:
+                kwargs = {"force": args.force}
+                if args.batch_size:
+                    kwargs["batch_size"] = args.batch_size
+                comment_results = collect_comments_for_range(subreddit, start, end, **kwargs)
             for r in comment_results:
                 logger.info("comments %s", r)
 

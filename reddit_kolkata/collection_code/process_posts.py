@@ -85,6 +85,11 @@ def normalize_post(raw: dict, slug: str, raw_json_path: str, pinned_ids: set) ->
 
     post_id = raw.get("post_id")
 
+    # Only Arctic-Shift-sourced raw records carry these keys; BrightData raw records never
+    # do, so .get() falls back to None there exactly as before (see README "Known gaps").
+    crossposts = raw.get("crosspost_parent_list") or None
+    crosspost_origin = crossposts[0] if crossposts else None
+
     return {
         "subreddit": slug,
         "post_id": post_id,
@@ -95,14 +100,14 @@ def normalize_post(raw: dict, slug: str, raw_json_path: str, pinned_ids: set) ->
         "flair": raw.get("tag"),
         "post_type": infer_post_type(raw),
         "score": raw.get("num_upvotes"),
-        "upvote_ratio": None,  # not present anywhere in BrightData's raw post schema
+        "upvote_ratio": raw.get("upvote_ratio"),  # BrightData raw never has this key -> None
         "num_comments": raw.get("num_comments"),
         "permalink": raw.get("url"),
         "external_url": external_url,
         "external_domain": urlparse(external_url).netloc if external_url else None,
-        "is_crosspost": None,  # unresolved: no confirmed crosspost marker found, see README
-        "crosspost_original_post_id": None,
-        "crosspost_original_subreddit": None,
+        "is_crosspost": bool(crossposts) if crossposts is not None else None,
+        "crosspost_original_post_id": crosspost_origin.get("id") if crosspost_origin else None,
+        "crosspost_original_subreddit": crosspost_origin.get("subreddit") if crosspost_origin else None,
         "is_stickied": True if post_id in pinned_ids else None,
         "is_deleted": is_deleted_author or is_deleted_title or is_deleted_body,
         "is_removed": is_removed_author or is_removed_title or is_removed_body,
