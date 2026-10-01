@@ -45,6 +45,7 @@ def _to_raw_post(raw: dict, slug: str) -> dict:
         "community_members_num": raw.get("subreddit_subscribers"),
         "post_karma": None,
         "crosspost_parent_list": crossposts,
+        "stickied": raw.get("stickied"),
         "timestamp": date_utils.iso_now(),
         "source": "arcticshift",
     }

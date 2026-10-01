@@ -102,3 +102,14 @@ def fetch_comments_for_post(post_id_bare: str) -> list[dict]:
     """All comments (flat, unthreaded) under one post. post_id_bare has no t3_ prefix."""
     params = {"link_id": f"t3_{post_id_bare}", "limit": PAGE_LIMIT, "sort": "asc"}
     return _paginate("/comments/search", params)
+
+
+def fetch_subreddit_about(subreddit: str) -> dict | None:
+    """The subreddit's own "about" object (created_utc, description, subscribers, title, ...).
+
+    Does NOT carry rules, moderator list, pinned posts, or mod announcements -- Reddit never
+    puts those on the subreddit object itself, and Arctic Shift doesn't mirror the separate
+    endpoints that do (about/rules.json, about/moderators.json, the hot listing).
+    """
+    results = _get("/subreddits/search", {"subreddit": subreddit, "limit": 1})
+    return results[0] if results else None

@@ -7,60 +7,166 @@ different `--subreddit` flag, not a code change.
 
 ## API / tool / data source used
 
-- **Posts**: [BrightData Datasets API v3](https://docs.brightdata.com/api-reference/marketplace-dataset-api/trigger-a-collection-or-discovery), dataset `gd_lvz8ah06191smkebj4` (env `BRIGHTDATA_REDDIT_POSTS_DATASET_ID`). Discovery mode: `discover_new` / `discover_by=subreddit_url`.
-- **Comments**: BrightData Datasets API v3, dataset id in env `BRIGHTDATA_REDDIT_COMMENTS_DATASET_ID`. This dataset only supports `url_collection` mode (a plain list of known post URLs) — it explicitly rejects `discover_new` with HTTP 400 `"This dataset does not support discovery. Supported types: ['url_collection']"`.
-- **Subreddit metadata**: Reddit's public `.json` endpoints (`reddit.com/r/<sub>/about.json`, `about/rules.json`, `about/moderators.json`, `hot.json`) as the primary attempt, falling back to fields already embedded in already-collected posts/comments (`community_description`, `community_members_num`, `community_rank`) so this costs zero extra requests. See **Known gaps** below — the public endpoints are currently blocked from our environment.
-- A discarded Apify proof of concept (`reddit_scrapper_apify.py`, actor `prodiger~reddit-scraper`) exists at the project root from earlier testing; it is **not used** by this pipeline (comments were disabled in that POC and it has no comments-dataset equivalent).
+Two sources exist in this codebase; **Arctic Shift is the one actually used for all current
+data** (`--source arcticshift`, the default in practice). BrightData was the original plan
+but became unusable partway through the project (see "Known gaps" below) and is kept only as
+dead-but-working code (`collect_posts.py`, `collect_comments.py`, `brightdata_client.py`).
+
+- **Arctic Shift** (`collection_code/arcticshift_client.py`): a third-party, continuously-updated
+  Reddit archive (successor to Pushshift), `https://arctic-shift.photon-reddit.com/api`. No API
+  key. Endpoints used:
+  - `/posts/search?subreddit=&after=&before=&limit=&sort=` — paginated, cursor by `created_utc`.
+  - `/comments/search?link_id=t3_<id>&limit=&sort=` — returns a **flat** list of every comment
+    under one post (not nested); we reconstruct a 2-level tree client-side (see below).
+  - `/subreddits/search?subreddit=&limit=` — the subreddit's own "about" object.
+  - Repo: https://github.com/ArthurHeitmann/arctic_shift
+- **BrightData Datasets API v3** (`collection_code/brightdata_client.py`, `collect_posts.py`,
+  `collect_comments.py`): dataset `gd_lvz8ah06191smkebj4` for posts, a separate dataset ID (env
+  `BRIGHTDATA_REDDIT_COMMENTS_DATASET_ID`) for comments. Still wired into `run_pipeline.py` via
+  `--source brightdata` (the default) but unused in practice since the account went inactive and
+  this network also intermittently blocks `api.brightdata.com` with TLS interception errors.
+  Docs: https://docs.brightdata.com/api-reference/marketplace-dataset-api/trigger-a-collection-or-discovery
+- **Subreddit metadata**: tried in order — Reddit's own public `.json` endpoints first
+  (`reddit_public_client.py`), then Arctic Shift's `/subreddits/search` (closes most of the gap
+  the public endpoint leaves), then fields already embedded in collected posts/comments (zero
+  extra cost). See **Known gaps** — rules, moderator list, pinned posts, and mod announcements
+  remain unavailable from *any* of these sources (Reddit doesn't expose them on the subreddit
+  object itself, and Arctic Shift doesn't mirror the separate `about/rules.json` /
+  `about/moderators.json` endpoints).
+- A discarded Apify proof of concept (`reddit_scrapper_apify.py`) exists at the project root
+  from earlier testing; not used by this pipeline.
 
 ## Authentication
 
-- BrightData: `Authorization: Bearer {BRIGHTDATA_API_KEY}` header, all requests. Key and dataset IDs live in a project-root `.env` (not committed): `BRIGHTDATA_API_KEY`, `BRIGHTDATA_REDDIT_POSTS_DATASET_ID`, `BRIGHTDATA_REDDIT_COMMENTS_DATASET_ID`, `BRIGHTDATA_DATASETS_BASE_URL`.
-- Reddit public endpoints: no auth, only a descriptive `User-Agent` (see `config.REDDIT_PUBLIC_USER_AGENT`).
+- **Arctic Shift**: none. Only a sensible default `User-Agent`/no special headers needed.
+- **BrightData**: `Authorization: Bearer {BRIGHTDATA_API_KEY}` header, all requests. Key and
+  dataset IDs live in a project-root `.env` (not committed).
+- **Reddit public endpoints**: no auth, only a descriptive `User-Agent` (see
+  `config.REDDIT_PUBLIC_USER_AGENT`).
 
 ## Exact filters / query parameters
 
-- **Posts trigger, dated attempt**: `{"url": "https://www.reddit.com/r/<sub>/", "start_date": "YYYY-MM-DD"}`, sent with `type=discover_new&discover_by=subreddit_url`. Two things were confirmed live on 2026-08-27, before the BrightData account went inactive:
-  - `end_date` is **rejected outright** with HTTP 400 (`"This input should not contain a end_date field"`) — it is never sent.
-  - `sort_by` is enum-validated server-side; `"new"` (lowercase) was rejected (`"This value is not allowed"`) and the correct value/casing was never confirmed before the outage, so `sort_by` is currently **not sent at all**.
-  - A `start_date`-only request against r/kolkata returned HTTP 200 with **0 records** in ~13 seconds. It's unresolved whether that means "genuinely nothing found by this discovery mode" or a subtly wrong parameter — **retest this once the account reactivates** (see Known gaps).
-- **Posts trigger, bare fallback**: `{"url": "https://www.reddit.com/r/<sub>/"}` with no date params at all — this is the same call the original working proof-of-concept (`brightdata_reddit_test.py`) used successfully, and it was still running (not erroring) after 12+ minutes against r/kolkata's full history when last observed. `collect_posts.collect_posts_for_range` tries the cheap dated request first; if it returns 0 records, it automatically falls back to exactly **one** bare full-history request per run, and reuses that single response to satisfy every pending month in the requested range at once (not just the first one) — so a bad dated response never turns into a bare-fallback-per-month cost blowup.
-- **Comments trigger** payload: `[{"url": "<post_permalink>"}, ...]` (no `type`/`discover_by` — this dataset only supports `url_collection`), batched at `config.COMMENTS_BATCH_SIZE = 50` post URLs per request.
-- **Date filtering**: regardless of what BrightData honors server-side, every downloaded post is re-checked client-side against the requested date window (`collect_posts._within_range`) before being written to disk — this is a hard backstop, not an assumption.
+**Arctic Shift posts** (`collect_posts_arcticshift.py` → `arcticshift_client.fetch_posts`):
+one call per pending date range, `after=<ISO date>`, `before=<epoch of end-date + 1 day>`,
+`limit=100`, `sort=asc`; paginated by re-issuing with `after=<last page's created_utc + 1>`
+until a short page is returned. Every downloaded post is still re-checked client-side against
+the requested date window before being written to disk (`_within_range`), as a hard backstop.
+
+**Arctic Shift comments** (`collect_comments_arcticshift.py` →
+`arcticshift_client.fetch_comments_for_post`): one call per post, `link_id=t3_<post_id>`,
+`limit=100`, `sort=asc`, paginated the same way. Fetches run **concurrently**
+(`ThreadPoolExecutor`, `--workers`, default 5) — file writes stay single-threaded in the main
+thread so dedup/state bookkeeping has no race condition; only the network fetch overlaps.
+
+**Arctic Shift subreddit metadata**: `subreddit=<slug>&limit=1`, single call, no pagination.
+
+**BrightData** (legacy path, documented for completeness): posts trigger tries
+`{"url": "...", "start_date": "YYYY-MM-DD"}` first (cheap), falls back to one bare
+full-history request per run if that returns 0 records; comments trigger is
+`[{"url": "<post_permalink>"}, ...]`, batched 50 at a time. See git history / inline
+docstrings in `collect_posts.py` / `collect_comments.py` for the full detail — this path is
+not currently exercised.
 
 ## Pagination procedure
 
-BrightData's Datasets API is asynchronous, not page-based: `POST /trigger` returns a `snapshot_id`; `GET /progress/{snapshot_id}` is polled every 10s (`config.POLL_INTERVAL_S`) until `status == "ready"` (or `failed`/`error`, or a 1-hour timeout); then `GET /snapshot/{snapshot_id}?format=json` returns the full result array in one response. There is no further pagination on our side — one trigger call is one logical page. Large date ranges are instead split into calendar-month chunks (`date_utils.month_chunks`) purely to bound the blast radius of any single failed/retried request, not because the API itself paginates.
+Arctic Shift is a plain synchronous paginated GET (no async job): one page is up to 100
+records; the next page's cursor is the last record's `created_utc + 1`. Loop until a page
+comes back shorter than the limit (or empty). BrightData, by contrast, is asynchronous:
+`POST /trigger` → poll `GET /progress/{snapshot_id}` every 10s → `GET /snapshot/{snapshot_id}`.
 
 ## Date filtering
 
-Handled two ways, layered:
-1. Server-side, best-effort: `start_date`/`end_date` sent in the trigger payload (see above).
-2. Client-side, guaranteed: every post's `date_posted` is parsed and compared against the requested window after download; anything outside the window is dropped before being written to `raw/`.
+Two layers: server-side `after`/`before` params on the Arctic Shift request, and a client-side
+re-check of every downloaded post's `date_posted` against the requested window before writing
+to `raw/` (`collect_posts_arcticshift._within_range`) — the server-side filter is trusted but
+never solely relied on.
 
 ## Comment / reply retrieval procedure
 
-1. `collect_posts` must run first for a given month — comment collection reads the list of `(post_id, url)` pairs from that month's already-saved `raw/<slug>/<month>/posts.jsonl`.
-2. Post URLs are batched (50 at a time) into `url_collection` trigger calls against the comments dataset.
-3. Each call returns one record per **top-level comment**, with a nested `replies` array of **direct replies only**. See **Known gaps** — deeper reply-to-reply threads are not retrievable from this dataset.
-4. `process_comments.flatten_comment_tree` turns each raw record into 1 row (the top-level comment, `depth=0`, `parent_id` = the post's id) plus one row per direct reply (`depth=1`, `parent_id` = the top-level comment's id), preserving full parent linkage.
+1. `collect_posts_arcticshift` must run first for a given month — comment collection reads the
+   list of `(post_id, url)` pairs from that month's already-saved
+   `raw/<slug>/<month>/posts.jsonl`.
+2. For each post, `arcticshift_client.fetch_comments_for_post` returns a **flat** list of every
+   comment under the post (no native tree structure from this endpoint).
+3. `collect_comments_arcticshift._build_comment_tree` reconstructs a 2-level tree: top-level
+   comments are those whose `parent_id` equals the post's own `t3_` fullname; direct replies are
+   comments whose `parent_id` equals a top-level comment's `t1_` fullname. **Deeper
+   reply-to-reply threads are collapsed/dropped** — this matches the same depth-1 cap the
+   original BrightData comments dataset had, kept deliberately so both subreddits share one
+   schema rather than introducing a difference between sources.
+4. `process_comments.flatten_comment_tree` turns each reconstructed record into 1 row per
+   top-level comment (`depth=0`) plus 1 row per direct reply (`depth=1`), preserving
+   `parent_id` linkage so comment trees (to depth 1) can be reconstructed from `comments.csv`.
 
 ## Rate limits encountered
 
-No explicit rate-limit error was hit during development; BrightData's snapshot jobs for a single post's comments took roughly 5–8 minutes to become `ready` in testing. Comment batches are processed **sequentially**, not concurrently, since BrightData's concurrent-snapshot ceiling for this account has not been characterized — this is a deliberately conservative default (`config.COMMENTS_BATCH_SIZE`), not a discovered hard limit.
+- **Arctic Shift**: no official hard limit; their own guidance is "a couple requests per
+  second" is safe. In practice, their backend has shown two failure modes under load, both
+  handled by `arcticshift_client._get`'s retry loop (6 attempts, backoff `1, 2, 5, 15, 30, 60`
+  seconds): (a) genuine connection-level failures (SSL cert-chain errors, connection resets,
+  read timeouts — these also hit this network independent of Arctic Shift, see below), and
+  (b) quick `422`/`503` responses that are **transient, not semantic** — confirmed empirically
+  by retrying an identical failed request seconds later and getting a normal `200`. Both are
+  retried identically; only genuine non-retryable 4xx (malformed request) propagate immediately.
+- **This network's own reliability** is the dominant real-world constraint, independent of
+  either API: outbound HTTPS has repeatedly failed for tens of seconds to minutes at a time
+  with `SSLCertVerificationError: self signed certificate in certificate chain` (looks like
+  local TLS interception — VPN/proxy/security software, not a code bug) — the same signature
+  that made BrightData unusable in the first place. Two further operational issues were found
+  and fixed during multi-hour unattended runs: (1) **the machine going to sleep** silently
+  stalls a background collection process for however long it's asleep — fixed by wrapping
+  long runs in `caffeinate -i -s`; (2) the per-post sequential loop made throughput collapse
+  during backend flakiness (each retry-laden post costing minutes) — fixed by (a) a much
+  shorter initial backoff (quick transient errors recover in ~1s, not 5s) and (b) running
+  several posts' comment-fetches concurrently instead of one at a time.
+- **BrightData**: single-post comment snapshot jobs took roughly 5–8 minutes to become `ready`
+  in earlier testing; not currently exercised.
 
 ## Fields unavailable through the API (confirmed gaps)
 
-- **`upvote_ratio`**: not present anywhere in BrightData's raw post schema. Always `null` in `posts.csv`.
-- **True crosspost linkage**: the only candidate field, `related_posts`, reads like a "related reading" recommendation list, not genuine crosspost parentage (no `crosspost_parent_list`-equivalent field was found). `is_crosspost` / `crosspost_original_post_id` / `crosspost_original_subreddit` are always `null` pending a confirmed marker; `processed/crossposts.csv` will legitimately be empty until one is found.
-- **Comment depth beyond 1**: the comments dataset returns top-level comments plus their *direct* replies only — no further nesting. `comments.csv` therefore only contains `depth` values 0 and 1, even where a real Reddit thread goes deeper. Each reply's `num_replies` field is also `null` in the raw data, so we cannot even detect how much is missing beyond depth 1.
-- **`is_mod` on replies**: the raw comments dataset marks `is_moderator` on top-level comment records only; reply objects carry no such field. `is_mod` is `null` for all `depth=1` rows.
-- **Subreddit rules / moderator list / creation date / flair list / pinned posts / mod announcements**: intended to come from Reddit's public `.json` endpoints. As of 2026-08-27, `www.reddit.com/r/<sub>/*.json` returns HTTP 403 from this environment regardless of `User-Agent`, and `old.reddit.com/*.json` returns a login-wall HTML page instead of JSON. The pipeline still records whatever it can passively derive from already-collected posts/comments (`community_description`, `community_members_num`, `community_rank`) at zero extra request cost, and writes `null` + an explanatory note for everything else. **To close this gap**: either (a) set up a Reddit OAuth "script" app (`reddit.com/prefs/apps`) and add `REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET` so `reddit_public_client.py` can be upgraded to authenticated calls, or (b) supply a BrightData "subreddit info" dataset ID if one exists on the account (checked at build time — none was found among the currently subscribed datasets).
+- **Comment depth beyond 1**: both sources return/are reconstructed into top-level comments
+  plus their *direct* replies only — `comments.csv` has `depth` values 0 and 1 only.
+- **Subreddit rules / moderator list / pinned posts / mod announcements**: unavailable from
+  every source tried — Reddit's public `.json` endpoints are blocked (HTTP 403) from this
+  environment; Arctic Shift's `/subreddits/search` returns the subreddit's "about" object
+  (which *does* now supply `created_utc`, `description`/`public_description`, `subscribers`,
+  `title`) but not rules/moderators/pinned-posts/announcements, because Reddit itself doesn't
+  put those on the subreddit object — they're separate endpoints Arctic Shift doesn't mirror.
+  `subreddit_metadata/*.json` records `null` + an explanatory note for these fields, not a
+  guess. To close this gap: a Reddit OAuth "script" app (`reddit.com/prefs/apps`) with
+  `REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET` would let `reddit_public_client.py` use
+  authenticated calls instead of the blocked public ones.
+- **`is_stickied`**: populated from Arctic Shift's own per-post `stickied` field for any post
+  fetched *after* this field was wired in; posts collected earlier in the project (most of the
+  current dataset) fall back to the subreddit-metadata `pinned_posts` list, which is itself
+  empty (see above) — so `is_stickied` is mostly `null` for already-collected data. Re-fetching
+  posts (`--force` on the posts step) would backfill it; not done by default to avoid an
+  otherwise-unnecessary full re-download.
+- **`upvote_ratio` / true crosspost linkage**: present for any post sourced via Arctic Shift
+  (`upvote_ratio`, `crosspost_parent_list` with real original author/URL/date — see
+  `processed/crossposts.csv`); still `null`/absent for the handful of posts originally sourced
+  via BrightData, whose raw schema never carried these fields.
 
 ## Known gaps / failed collection periods
 
-Check `processed/validation_report.json` (written by `validate.py`) for the live, current list of `missing_periods` per subreddit and any `collection_failures` — this is generated from `collection_state.csv`, not hardcoded here, since it changes every run.
+Check `processed/validation_report.json` (written by `validate.py`) for the live, current list
+of `missing_periods` per subreddit and any `collection_failures` — generated from
+`collection_state.csv`, not hardcoded here, since it changes every run. As of this writing:
 
-**Collection status as of 2026-08-27**: the BrightData account used for this project went inactive mid-development (`"Customer is not active"` on every trigger call) and is expected to reactivate next month. No real collection has run yet — `collection_state.csv`/`collection_log.csv` are empty and `raw/` is empty. Every module was validated against a synthetic offline dry-run (mirroring the exact schemas confirmed live: real posts/comments field names, the 0-record dated-request behavior, and the bare-fallback path) to confirm the state machine, dedup, CSV generation, and resumability all work correctly end to end. **Once the account reactivates**: run `python -m reddit_kolkata.collection_code.run_pipeline --subreddit kolkata --subreddit kolkatacity --start-date 2025-04-01` and additionally re-verify the two open items above (whether `start_date`-only genuinely returns 0 for r/kolkata or was a parameter issue, and the correct `sort_by` value) since confirming either could make posts collection meaningfully cheaper than the bare full-history fallback this pipeline currently relies on.
+- **Both subreddits**: full real post history collected, 2025-04-01 through present.
+- **r/KolkataCity**: comments collected (≥1 pass) for essentially the whole date range.
+- **r/kolkata**: comments collected for 2025-04, 2025-05 (mostly), 2026-01 through 2026-09
+  (the active-collection range), and 2026-08/2026-09 (most recent months). **2025-06 through
+  2025-12 comments were deliberately never attempted** — a scope decision, not a failure: this
+  subreddit turned out to have ~90,000 posts total (vs. ~13,500 for KolkataCity), several times
+  larger than originally scoped, and comment-by-comment collection at that volume is a
+  multi-day job; Jan–Sep 2026 was prioritized as the actually-needed range. Posts for those
+  months *are* fully collected; only comments are missing. Rerunning
+  `collect_comments_arcticshift.py --subreddit kolkata --start-date 2025-06-01 --end-date 2025-12-31`
+  picks this up with no re-work of anything already done.
+- A handful of individual posts per month (visible as `failed_posts` in run output / the
+  `failed` status rows in `collection_log.csv`) never got comments after exhausting retries —
+  these self-heal on any future rerun since a never-written post is never marked "covered."
 
 ## How completed periods are tracked
 
@@ -73,34 +179,59 @@ Check `processed/validation_report.json` (written by `validate.py`) for the live
 | `month` | `YYYY-MM` |
 | `period_start` / `period_end` | cumulative date range actually covered so far for this month |
 | `status` | `pending`, `partial`, `complete`, or `failed` |
-| `snapshot_id` | last BrightData snapshot id used |
+| `snapshot_id` | last BrightData snapshot id, or `arcticshift` for that source |
 | `records_collected` | records appended in the most recent successful run for this row |
 | `last_attempt_at` | ISO timestamp of the last write to this row |
 | `error_message` | last error, if `status == failed` |
 
-This is keyed by month rather than the literal `(subreddit, start_date, end_date)` tuple sketched in the original task spec, deliberately: an exact-tuple key would force a full month re-fetch every time a later run's `end_date` extends past a previously-partial month (e.g. today's run covers August through the 27th; a run in October would otherwise see `(2025-08-01, 2025-08-31)` as a brand-new key and re-fetch all of August). Keying by month lets `state.pending_subrange` fetch only the uncovered delta.
+This is keyed by month rather than the literal `(subreddit, start_date, end_date)` tuple
+sketched in the original task spec, deliberately: an exact-tuple key would force a full month
+re-fetch every time a later run's `end_date` extends past a previously-partial month. Keying by
+month lets `state.pending_subrange` fetch only the uncovered delta.
 
-Before any API call, every `collect_*` function checks this file. Comments additionally self-heal from disk content: `collect_comments.already_covered_post_ids` reads whatever is already in that month's `comments.jsonl` and only re-batches posts not yet present there, rather than trusting a batch counter — this means a crash mid-batch loses no bookkeeping.
+Before any API call, every `collect_*` function checks this file. Comments additionally
+self-heal from disk content: `already_covered_post_ids_bare` reads whatever is already in that
+month's `comments.jsonl` and only re-batches posts not yet present there, rather than trusting a
+counter — a crash mid-run loses no bookkeeping, it just resumes.
 
-Every actual API call (one per posts-month-chunk, one per comments-batch, one per metadata snapshot) is also logged as its own row in `collection_log.csv`.
+Every actual API call is also logged as its own row in `collection_log.csv`.
 
 ## How to resume an interrupted collection
 
-Just rerun the same command:
+Rerun the same command — any `complete` month/data-type is skipped without a network call, any
+`partial` resumes from the uncovered delta, any `failed` retries from scratch for that
+month/post only:
 
-```
-python -m reddit_kolkata.collection_code.run_pipeline --subreddit kolkata --subreddit kolkatacity --start-date 2025-04-01
+```bash
+# full pipeline (posts + metadata + comments), Arctic Shift source
+python -m reddit_kolkata.collection_code.run_pipeline \
+  --subreddit kolkata --subreddit kolkatacity --start-date 2025-04-01 --source arcticshift
+
+# comments only, scoped to a date range, with concurrency
+python -m reddit_kolkata.collection_code.collect_comments_arcticshift \
+  --subreddit kolkata --start-date 2026-01-01 --end-date 2026-09-30 --workers 6
+
+# posts only
+python -m reddit_kolkata.collection_code.collect_posts_arcticshift \
+  --subreddit kolkata --start-date 2025-04-01
 ```
 
-Any month already `complete` in `collection_state.csv` is skipped without any network call. Any `partial` month resumes from where it left off (posts: the uncovered date delta; comments: the posts not yet covered). Any `failed` month is retried from scratch for that month only. Use `--force` to bypass all of this and re-fetch everything (useful for a full manual refresh).
+Long unattended runs on a laptop should be wrapped in `caffeinate -i -s <command>` so the
+process doesn't silently stall if the machine sleeps (see "Rate limits encountered" above).
+Use `--force` to bypass all state-based skipping (full manual refresh).
 
 ## How to add another subreddit later
 
-```
-python -m reddit_kolkata.collection_code.run_pipeline --subreddit <newsubreddit> --start-date 2025-04-01
+```bash
+python -m reddit_kolkata.collection_code.run_pipeline \
+  --subreddit <newsubreddit> --start-date 2025-04-01 --source arcticshift
 ```
 
-No code changes needed. Raw data lands in its own `raw/<newslug>/` tree, untouched existing subreddits' raw data is never re-read from the network, and the processing step (`process_posts` / `process_comments` / `build_users` / `build_monthly_activity`) always re-scans **every** subreddit folder under `raw/`, so `users.csv` gains new `posts_<newslug>`/`comments_<newslug>` columns automatically and `monthly_activity.csv`/`posts.csv`/`comments.csv` simply include the new subreddit's rows.
+No code changes needed. Raw data lands in its own `raw/<newslug>/` tree, untouched existing
+subreddits' raw data is never re-read from the network, and the processing step always
+re-scans **every** subreddit folder under `raw/`, so `users.csv` gains new
+`posts_<newslug>`/`comments_<newslug>` columns automatically and `monthly_activity.csv` /
+`posts.csv` / `comments.csv` simply include the new subreddit's rows.
 
 ## File layout
 
@@ -127,18 +258,17 @@ reddit_kolkata/
 
 ## Running it
 
-All commands run from the project root (`4-1 SEM/Project/`), using the venv (`pandas`/`python-dateutil`/`requests`/`python-dotenv` must be installed — see root `requirements.txt`):
+All commands run from the project root (`4-1 SEM/Project/`), using the venv:
 
 ```bash
 source venv/bin/activate
 
-# full pipeline, both subreddits
 python -m reddit_kolkata.collection_code.run_pipeline \
-  --subreddit kolkata --subreddit kolkatacity --start-date 2025-04-01
+  --subreddit kolkata --subreddit kolkatacity --start-date 2025-04-01 --source arcticshift
 
-# individual steps (useful for debugging / re-running just one stage)
-python -m reddit_kolkata.collection_code.collect_posts --subreddit kolkata --start-date 2025-04-01
-python -m reddit_kolkata.collection_code.collect_comments --subreddit kolkata --start-date 2025-04-01
+# individual steps
+python -m reddit_kolkata.collection_code.collect_posts_arcticshift --subreddit kolkata --start-date 2025-04-01
+python -m reddit_kolkata.collection_code.collect_comments_arcticshift --subreddit kolkata --start-date 2025-04-01 --workers 6
 python -m reddit_kolkata.collection_code.collect_subreddit_metadata --subreddit kolkata
 python -m reddit_kolkata.collection_code.validate --start-date 2025-04-01
 ```
@@ -153,19 +283,22 @@ python -m reddit_kolkata.collection_code.validate --start-date 2025-04-01
 | `jsonl_utils.py` | JSONL read/append-with-dedup, atomic JSON writes |
 | `log_utils.py` | logger + `collection_log.csv` writer |
 | `state.py` | `collection_state.csv` read/upsert, resumability logic |
-| `brightdata_client.py` | trigger/poll/download wrapper — only module that calls BrightData |
+| `arcticshift_client.py` | Arctic Shift HTTP client — retry/backoff, pagination; only module that calls arctic-shift.photon-reddit.com |
+| `collect_posts_arcticshift.py` | month-by-month posts collection via Arctic Shift |
+| `collect_comments_arcticshift.py` | concurrent per-post comments collection via Arctic Shift |
+| `brightdata_client.py` | BrightData trigger/poll/download wrapper (legacy, unused in practice) |
+| `collect_posts.py` / `collect_comments.py` | BrightData-sourced collectors (legacy, unused in practice) |
 | `reddit_public_client.py` | best-effort Reddit `.json` client (see Known gaps) |
-| `collect_subreddit_metadata.py` | subreddit metadata snapshot |
-| `collect_posts.py` | month-by-month posts collection |
-| `collect_comments.py` | batched comments collection per post |
+| `collect_subreddit_metadata.py` | subreddit metadata snapshot — Reddit public → Arctic Shift → derived-from-posts, in that order |
 | `process_posts.py` | raw → `posts.csv` + `crossposts.csv` |
 | `process_comments.py` | raw → `comments.csv` |
 | `build_users.py` | → `users.csv` + overlap summary |
 | `build_monthly_activity.py` | → `monthly_activity.csv` |
 | `validate.py` | → `validation_report.json` (spec section 8) |
-| `run_pipeline.py` | orchestrates all of the above end to end |
+| `run_pipeline.py` | orchestrates all of the above end to end, `--source {brightdata,arcticshift}` |
 
 ## Links
 
-- BrightData Datasets API (trigger/progress/snapshot): https://docs.brightdata.com/api-reference/marketplace-dataset-api/trigger-a-collection-or-discovery
-- Reddit's public JSON API (subject to the access issue documented above): https://www.reddit.com/dev/api/
+- Arctic Shift (API used for all current data): https://github.com/ArthurHeitmann/arctic_shift
+- BrightData Datasets API (legacy, unused in practice): https://docs.brightdata.com/api-reference/marketplace-dataset-api/trigger-a-collection-or-discovery
+- Reddit's public JSON API (subject to the 403 block documented above): https://www.reddit.com/dev/api/

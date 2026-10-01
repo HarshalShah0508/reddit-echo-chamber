@@ -1,11 +1,11 @@
 {
   "subreddit": "kolkatacity",
-  "collected_at": "2026-09-25T09:56:42.374068+00:00",
-  "source": "derived_from_posts_dataset",
-  "created_utc": null,
+  "collected_at": "2026-10-01T05:58:50.346163+00:00",
+  "source": "arcticshift_subreddits_search",
+  "created_utc": 1701782455,
   "description": null,
-  "about_markdown": null,
-  "subscribers": 22378,
+  "about_markdown": "",
+  "subscribers": 1,
   "subreddit_rank": null,
   "rules": [],
   "post_flairs": [],
@@ -13,5 +13,5 @@
   "pinned_posts": [],
   "moderator_announcements": [],
   "raw_about_response": null,
-  "notes": "Reddit public about.json unreachable (HTTP 403 from this environment as of 2026-08-27). Rules unavailable (public rules.json blocked or subreddit has none). Moderator list unavailable (public moderators.json blocked or empty). Description/member count/rank fall back to null: no public API access and no raw posts collected yet."
+  "notes": "Reddit public about.json unreachable (HTTP 403 from this environment as of 2026-08-27). Rules unavailable: not on Reddit's subreddit object and Arctic Shift doesn't mirror the separate about/rules.json endpoint. Moderator list unavailable: not on Reddit's subreddit object and Arctic Shift doesn't mirror the separate about/moderators.json endpoint."
 }

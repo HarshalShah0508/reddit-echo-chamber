@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-09-27T10:41:39.314283+00:00",
+  "generated_at": "2026-10-01T06:00:47.413550+00:00",
   "subreddits": {
     "kolkata": {
       "subreddit": "kolkata",
       "total_posts": 91328,
-      "total_comments": 123158,
-      "unique_authors": 43764,
+      "total_comments": 566456,
+      "unique_authors": 71883,
       "earliest_post": "2025-04-01T01:26:18.000Z",
       "latest_post": "2026-09-26T07:03:30.000Z",
       "cross_posts": 0,
       "posts_with_external_urls": 24,
       "deleted_removed_posts": 12577,
-      "deleted_removed_comments": 6385,
+      "deleted_removed_comments": 38945,
       "missing_periods": [
         "2025-04 (comments: partial)",
         "2025-05 (comments: partial)",
@@ -22,16 +22,18 @@
         "2025-10 (comments: never_attempted)",
         "2025-11 (comments: never_attempted)",
         "2025-12 (comments: never_attempted)",
-        "2026-01 (comments: never_attempted)",
-        "2026-02 (comments: never_attempted)",
-        "2026-03 (comments: never_attempted)",
-        "2026-04 (comments: never_attempted)",
-        "2026-05 (comments: never_attempted)",
-        "2026-06 (comments: never_attempted)",
-        "2026-07 (comments: never_attempted)",
+        "2026-01 (comments: partial)",
+        "2026-02 (comments: partial)",
+        "2026-03 (comments: partial)",
+        "2026-04 (comments: partial)",
+        "2026-05 (comments: partial)",
+        "2026-06 (comments: partial)",
+        "2026-07 (comments: partial)",
         "2026-08 (comments: partial)",
         "2026-09 (posts: failed)",
-        "2026-09 (comments: partial)"
+        "2026-09 (comments: partial)",
+        "2026-10 (posts: never_attempted)",
+        "2026-10 (comments: never_attempted)"
       ]
     },
     "kolkatacity": {
@@ -64,7 +66,9 @@
         "2026-07 (comments: partial)",
         "2026-08 (comments: partial)",
         "2026-09 (posts: partial)",
-        "2026-09 (comments: partial)"
+        "2026-09 (comments: partial)",
+        "2026-10 (posts: never_attempted)",
+        "2026-10 (comments: never_attempted)"
       ]
     }
   },
@@ -92,7 +96,7 @@
       "status": "partial",
       "snapshot_id": NaN,
       "records_collected": "0",
-      "last_attempt_at": "2026-09-25T09:12:23.316708+00:00",
+      "last_attempt_at": "2026-10-01T05:39:06.702821+00:00",
       "error_message": NaN
     },
     {
@@ -103,8 +107,8 @@
       "period_end": "2026-09-30",
       "status": "partial",
       "snapshot_id": NaN,
-      "records_collected": "371",
-      "last_attempt_at": "2026-09-25T09:56:23.293325+00:00",
+      "records_collected": "3589",
+      "last_attempt_at": "2026-10-01T05:49:04.527036+00:00",
       "error_message": NaN
     },
     {
@@ -357,6 +361,90 @@
       "snapshot_id": NaN,
       "records_collected": "23199",
       "last_attempt_at": "2026-09-26T17:36:43.686654+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-01",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "46",
+      "last_attempt_at": "2026-10-01T03:54:56.118455+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-02",
+      "period_start": "2026-02-01",
+      "period_end": "2026-02-28",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "0",
+      "last_attempt_at": "2026-10-01T04:02:17.250992+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-03",
+      "period_start": "2026-03-01",
+      "period_end": "2026-03-31",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "0",
+      "last_attempt_at": "2026-10-01T04:10:38.900319+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-04",
+      "period_start": "2026-04-01",
+      "period_end": "2026-04-30",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "0",
+      "last_attempt_at": "2026-10-01T04:20:49.087659+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-05",
+      "period_start": "2026-05-01",
+      "period_end": "2026-05-31",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "0",
+      "last_attempt_at": "2026-10-01T04:34:35.706571+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-06",
+      "period_start": "2026-06-01",
+      "period_end": "2026-06-30",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "35785",
+      "last_attempt_at": "2026-10-01T05:03:46.155431+00:00",
+      "error_message": NaN
+    },
+    {
+      "subreddit": "kolkata",
+      "data_type": "comments",
+      "month": "2026-07",
+      "period_start": "2026-07-01",
+      "period_end": "2026-07-31",
+      "status": "partial",
+      "snapshot_id": NaN,
+      "records_collected": "45620",
+      "last_attempt_at": "2026-10-01T05:38:37.548824+00:00",
       "error_message": NaN
     }
   ]

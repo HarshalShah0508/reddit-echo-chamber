@@ -1,22 +1,37 @@
 """Collect a point-in-time subreddit metadata snapshot.
 
-Primary source: Reddit's public .json endpoints (reddit_public_client). As of 2026-08-27
-these return HTTP 403 from this environment (documented gap, see reddit_public_client.py
-docstring and README). Secondary source: fields already embedded in previously-collected
-posts/comments raw data (community_description, community_members_num, community_rank) --
-this costs zero extra API requests, so it is always attempted regardless of the primary
-source's success. Run this AFTER collect_posts has run at least once so the secondary
-source has data to draw from.
+Three sources, tried in order, each filling whatever the previous one couldn't:
+1. Reddit's public .json endpoints (reddit_public_client) -- blocked (HTTP 403) from this
+   environment as of 2026-08-27 (documented gap, see reddit_public_client.py docstring).
+2. Arctic Shift's /api/subreddits/search (arcticshift_client) -- a stored-archive copy of
+   Reddit's own subreddit "about" object, unaffected by the 403 block. Confirmed to carry
+   created_utc/public_description/description/subscribers/title, but NOT rules, moderator
+   list, pinned posts, or mod announcements -- Reddit never exposes those on the subreddit
+   object itself (they're separate endpoints: about/rules.json, about/moderators.json, the
+   hot listing), and Arctic Shift doesn't mirror those endpoints. That remainder is a real,
+   unavoidable gap given the sources available here, not a bug -- see README "Known gaps".
+3. Fields already embedded in previously-collected posts/comments raw data
+   (community_description, community_members_num, community_rank) -- zero extra requests,
+   always attempted regardless of whether sources 1/2 succeeded. Run this AFTER collect_posts
+   has run at least once so this source has data to draw from.
 """
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from . import config, date_utils, jsonl_utils, reddit_public_client
+from . import arcticshift_client, config, date_utils, jsonl_utils, reddit_public_client
 from .log_utils import append_collection_log, get_logger
 
 logger = get_logger(__name__)
+
+
+def _fetch_arcticshift_about(subreddit: str) -> dict | None:
+    try:
+        return arcticshift_client.fetch_subreddit_about(config.slugify(subreddit))
+    except Exception:
+        logger.exception("Arctic Shift subreddit metadata fetch failed for %s", subreddit)
+        return None
 
 
 def _derive_from_raw_posts(subreddit: str) -> dict:
@@ -53,27 +68,38 @@ def collect_subreddit_metadata(subreddit: str) -> Path:
     if about is None:
         notes.append("Reddit public about.json unreachable (HTTP 403 from this environment as of 2026-08-27).")
     if not rules:
-        notes.append("Rules unavailable (public rules.json blocked or subreddit has none).")
+        notes.append("Rules unavailable: not on Reddit's subreddit object and Arctic Shift doesn't mirror the separate about/rules.json endpoint.")
     if not moderators:
-        notes.append("Moderator list unavailable (public moderators.json blocked or empty).")
+        notes.append("Moderator list unavailable: not on Reddit's subreddit object and Arctic Shift doesn't mirror the separate about/moderators.json endpoint.")
+
+    arcticshift_about = None if about is not None else _fetch_arcticshift_about(subreddit)
+    if about is None and arcticshift_about is None:
+        notes.append("Arctic Shift subreddit metadata also unavailable for this snapshot (request failed or subreddit not in their archive).")
 
     derived = _derive_from_raw_posts(subreddit)
-    if derived["description"] is None and about is None:
-        notes.append("Description/member count/rank fall back to null: no public API access and no raw posts collected yet.")
+    if derived["description"] is None and about is None and arcticshift_about is None:
+        notes.append("Description/member count/rank fall back to null: no API access and no raw posts collected yet.")
 
     pinned_posts = [p for p in hot_listing if p.get("stickied")]
     flairs_from_hot = sorted({p.get("link_flair_text") for p in hot_listing if p.get("link_flair_text")})
 
     about_data = (about or {}).get("data", {})
 
+    if about is not None:
+        source = "reddit_public_json"
+    elif arcticshift_about is not None:
+        source = "arcticshift_subreddits_search"
+    else:
+        source = "derived_from_posts_dataset"
+
     metadata = {
         "subreddit": slug,
         "collected_at": collected_at,
-        "source": "reddit_public_json" if about is not None else "derived_from_posts_dataset",
-        "created_utc": about_data.get("created_utc"),
-        "description": about_data.get("public_description") or derived["description"],
-        "about_markdown": about_data.get("description"),
-        "subscribers": about_data.get("subscribers") or derived["member_count"],
+        "source": source,
+        "created_utc": about_data.get("created_utc") or (arcticshift_about or {}).get("created_utc"),
+        "description": about_data.get("public_description") or (arcticshift_about or {}).get("public_description") or derived["description"],
+        "about_markdown": about_data.get("description") or (arcticshift_about or {}).get("description"),
+        "subscribers": about_data.get("subscribers") or (arcticshift_about or {}).get("subscribers") or derived["member_count"],
         "subreddit_rank": derived["subreddit_rank"],
         "rules": rules,
         "post_flairs": [{"text": t, "source": "derived_from_hot_listing"} for t in flairs_from_hot],
@@ -115,9 +141,9 @@ def collect_subreddit_metadata(subreddit: str) -> Path:
             "period_end": "",
             "data_type": "subreddit_metadata",
             "api_tool": metadata["source"],
-            "query_filter": "about/rules/moderators/hot.json + derived from raw posts",
+            "query_filter": "about/rules/moderators/hot.json, arcticshift /subreddits/search, derived from raw posts",
             "records_collected": 1,
-            "status": "complete" if about is not None else "partial",
+            "status": "complete" if (about is not None or arcticshift_about is not None) else "partial",
             "errors_or_limitations": metadata["notes"] or "",
         }
     )

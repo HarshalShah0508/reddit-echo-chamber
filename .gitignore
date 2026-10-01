@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 .DS_Store
 Reddit Data Collection Task.docx
+reddit_kolkata/logs/
+reddit_kolkata/processed/comments.csv
+reddit_kolkata/processed/posts.csv
+reddit_kolkata/processed/users.csv
+reddit_kolkata/raw/**/*.jsonl
