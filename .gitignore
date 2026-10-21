@@ -9,3 +9,6 @@ reddit_kolkata/processed/comments.csv
 reddit_kolkata/processed/posts.csv
 reddit_kolkata/processed/users.csv
 reddit_kolkata/raw/**/*.jsonl
+reddit_kolkata/parquet/
+reddit_kolkata/processed/notebook_exports/
+reddit_kolkata/notebooks/.ipynb_checkpoints/

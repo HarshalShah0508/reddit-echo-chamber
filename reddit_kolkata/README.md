@@ -168,6 +168,51 @@ of `missing_periods` per subreddit and any `collection_failures` — generated f
   `failed` status rows in `collection_log.csv`) never got comments after exhausting retries —
   these self-heal on any future rerun since a never-written post is never marked "covered."
 
+## Analytics layer (Parquet + DuckDB)
+
+`processed/posts.csv` / `comments.csv` are the source of truth; Parquet is a derived, fully
+regenerable query layer on top of them, so it's gitignored (`parquet/`) and never hand-edited.
+Parquet is used instead of querying the CSVs directly because DuckDB can prune by
+subreddit/month and skip whole files instead of scanning all 400K+ / 1.26M+ rows every query.
+
+**Layout** — Hive-style partitioning (`key=value` directories, required for DuckDB's
+`hive_partitioning=1` auto-detection; this is why it's a different layout from `raw/`'s
+`<slug>/<month>/`, which lacks the `key=` prefix):
+
+```
+parquet/
+├── posts/subreddit=<slug>/month=<YYYY-MM>/part-0000.parquet
+├── comments/subreddit=<slug>/month=<YYYY-MM>/part-0000.parquet
+└── _manifest.json   (per-partition row-count + content fingerprint, used to skip unchanged partitions)
+```
+
+**Converting**: `python -m reddit_kolkata.collection_code.convert_to_parquet --dataset both`
+reads the processed CSVs, normalizes dtypes/timestamps, re-applies ID-based dedup
+defensively, and writes one Parquet file per `(subreddit, month)` group found in the current
+input. It never deletes or rewrites a partition for a subreddit/month that isn't in the
+current input, and it skips rewriting any partition whose rows haven't changed since the
+last run (tracked in `_manifest.json`) — so adding a new subreddit or extending the
+collection period only writes the new/changed partitions, never reprocesses the rest.
+Pass `--force` to bypass the unchanged-partition skip (e.g. after a schema change).
+
+**Validating**: `python -m reddit_kolkata.collection_code.validate_parquet --start-date 2025-04-01`
+compares Parquet row counts against the source CSVs, checks for null required fields,
+duplicate IDs inside Parquet, and out-of-range timestamps, and reuses `validate.py`'s
+`collection_state.csv`-based missing-period detection. Writes
+`processed/parquet_validation_report.json`.
+
+**Querying**: `notebooks/reddit_analytics.ipynb` opens a DuckDB in-memory connection (no
+`.duckdb` file is ever created) and creates `posts`/`comments` views directly over
+`read_parquet('parquet/.../**/*.parquet', hive_partitioning=1)`. A parameters cell near the
+top lets you set subreddit, date range, and keywords; every required query (totals, monthly
+counts, unique/overlapping authors, top-20 by score/comments, keyword search, top linked
+domains) is implemented as its own cell, and results can be exported to
+`processed/notebook_exports/*.csv`. Run it interactively, or headlessly with:
+```bash
+jupyter nbconvert --to notebook --execute reddit_kolkata/notebooks/reddit_analytics.ipynb \
+  --output executed_reddit_analytics.ipynb
+```
+
 ## How completed periods are tracked
 
 `collection_state.csv`, one row per `(subreddit, data_type, month)`:
@@ -246,7 +291,15 @@ reddit_kolkata/
 │   ├── crossposts.csv
 │   ├── users.csv
 │   ├── monthly_activity.csv
-│   └── validation_report.json
+│   ├── validation_report.json
+│   ├── parquet_validation_report.json
+│   └── notebook_exports/  (CSV exports from the notebook, gitignored)
+├── parquet/               (generated from processed/*.csv, gitignored -- see "Analytics layer" below)
+│   ├── posts/subreddit=<slug>/month=<YYYY-MM>/part-0000.parquet
+│   ├── comments/subreddit=<slug>/month=<YYYY-MM>/part-0000.parquet
+│   └── _manifest.json
+├── notebooks/
+│   └── reddit_analytics.ipynb
 ├── subreddit_metadata/
 │   ├── kolkata_<date>.json (one per collection run)
 │   └── kolkata_latest.json
@@ -296,6 +349,8 @@ python -m reddit_kolkata.collection_code.validate --start-date 2025-04-01
 | `build_monthly_activity.py` | → `monthly_activity.csv` |
 | `validate.py` | → `validation_report.json` (spec section 8) |
 | `run_pipeline.py` | orchestrates all of the above end to end, `--source {brightdata,arcticshift}` |
+| `convert_to_parquet.py` | `processed/*.csv` → partitioned Parquet (see "Analytics layer" above) |
+| `validate_parquet.py` | → `parquet_validation_report.json` |
 
 ## Links
 

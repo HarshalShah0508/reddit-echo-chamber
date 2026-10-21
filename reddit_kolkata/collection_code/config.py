@@ -17,6 +17,11 @@ METADATA_DIR = ROOT / "subreddit_metadata"
 LOGS_DIR = ROOT / "logs"
 STATE_CSV = ROOT / "collection_state.csv"
 LOG_CSV = ROOT / "collection_log.csv"
+PARQUET_DIR = ROOT / "parquet"
+POSTS_PARQUET_DIR = PARQUET_DIR / "posts"
+COMMENTS_PARQUET_DIR = PARQUET_DIR / "comments"
+PARQUET_MANIFEST_PATH = PARQUET_DIR / "_manifest.json"
+NOTEBOOKS_DIR = ROOT / "notebooks"
 
 BRIGHTDATA_API_KEY = os.getenv("BRIGHTDATA_API_KEY")
 POSTS_DATASET_ID = os.getenv("BRIGHTDATA_REDDIT_POSTS_DATASET_ID")
@@ -45,7 +50,7 @@ def subreddit_url(subreddit: str) -> str:
     return f"https://www.reddit.com/r/{name}/"
 
 
-for _dir in (RAW_DIR, PROCESSED_DIR, METADATA_DIR, LOGS_DIR):
+for _dir in (RAW_DIR, PROCESSED_DIR, METADATA_DIR, LOGS_DIR, PARQUET_DIR, NOTEBOOKS_DIR):
     _dir.mkdir(parents=True, exist_ok=True)
 
 if not BRIGHTDATA_API_KEY:
