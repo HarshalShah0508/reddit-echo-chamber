@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T08:27:09.032697+00:00",
+  "generated_at": "2026-11-19T05:29:08.151192+00:00",
   "conversion": {
     "posts": {
       "csv_rows": 104827,
@@ -32,6 +32,758 @@
       }
     }
   },
+  "referential_integrity": {
+    "orphaned_comments": {
+      "total": 1,
+      "by_subreddit": {
+        "kolkata": 1
+      }
+    },
+    "posts_with_no_collected_comments": {
+      "total": 50747,
+      "by_subreddit": {
+        "kolkatacity": 997,
+        "kolkata": 49750
+      }
+    }
+  },
+  "null_rate_audit": {
+    "posts": {
+      "post_id": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "date_posted": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "author": {
+        "null_count": 1303,
+        "total": 104827,
+        "null_pct": 1.24,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 282,
+            "total": 13499,
+            "null_pct": 2.09
+          },
+          "kolkata": {
+            "null_count": 1021,
+            "total": 91328,
+            "null_pct": 1.12
+          }
+        }
+      },
+      "title": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "post_text": {
+        "null_count": 20730,
+        "total": 104827,
+        "null_pct": 19.78,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 5303,
+            "total": 13499,
+            "null_pct": 39.28
+          },
+          "kolkata": {
+            "null_count": 15427,
+            "total": 91328,
+            "null_pct": 16.89
+          }
+        }
+      },
+      "flair": {
+        "null_count": 1527,
+        "total": 104827,
+        "null_pct": 1.46,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 136,
+            "total": 13499,
+            "null_pct": 1.01
+          },
+          "kolkata": {
+            "null_count": 1391,
+            "total": 91328,
+            "null_pct": 1.52
+          }
+        }
+      },
+      "post_type": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "score": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "upvote_ratio": {
+        "null_count": 1310,
+        "total": 104827,
+        "null_pct": 1.25,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 1310,
+            "total": 91328,
+            "null_pct": 1.43
+          }
+        }
+      },
+      "num_comments": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "permalink": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "external_url": {
+        "null_count": 104803,
+        "total": 104827,
+        "null_pct": 99.98,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13499,
+            "total": 13499,
+            "null_pct": 100.0
+          },
+          "kolkata": {
+            "null_count": 91304,
+            "total": 91328,
+            "null_pct": 99.97
+          }
+        }
+      },
+      "external_domain": {
+        "null_count": 104803,
+        "total": 104827,
+        "null_pct": 99.98,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13499,
+            "total": 13499,
+            "null_pct": 100.0
+          },
+          "kolkata": {
+            "null_count": 91304,
+            "total": 91328,
+            "null_pct": 99.97
+          }
+        }
+      },
+      "is_crosspost": {
+        "null_count": 104734,
+        "total": 104827,
+        "null_pct": 99.91,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13406,
+            "total": 13499,
+            "null_pct": 99.31
+          },
+          "kolkata": {
+            "null_count": 91328,
+            "total": 91328,
+            "null_pct": 100.0
+          }
+        }
+      },
+      "crosspost_original_post_id": {
+        "null_count": 104734,
+        "total": 104827,
+        "null_pct": 99.91,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13406,
+            "total": 13499,
+            "null_pct": 99.31
+          },
+          "kolkata": {
+            "null_count": 91328,
+            "total": 91328,
+            "null_pct": 100.0
+          }
+        }
+      },
+      "crosspost_original_subreddit": {
+        "null_count": 104734,
+        "total": 104827,
+        "null_pct": 99.91,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13406,
+            "total": 13499,
+            "null_pct": 99.31
+          },
+          "kolkata": {
+            "null_count": 91328,
+            "total": 91328,
+            "null_pct": 100.0
+          }
+        }
+      },
+      "is_stickied": {
+        "null_count": 104827,
+        "total": 104827,
+        "null_pct": 100.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13499,
+            "total": 13499,
+            "null_pct": 100.0
+          },
+          "kolkata": {
+            "null_count": 91328,
+            "total": 91328,
+            "null_pct": 100.0
+          }
+        }
+      },
+      "is_deleted": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "is_removed": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "community_members_num": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "post_karma": {
+        "null_count": 103517,
+        "total": 104827,
+        "null_pct": 98.75,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 13499,
+            "total": 13499,
+            "null_pct": 100.0
+          },
+          "kolkata": {
+            "null_count": 90018,
+            "total": 91328,
+            "null_pct": 98.57
+          }
+        }
+      },
+      "num_related_posts": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "collected_at": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "raw_json_path": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "month": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "subreddit": {
+        "null_count": 0,
+        "total": 104827,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 13499,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 91328,
+            "null_pct": 0.0
+          }
+        }
+      }
+    },
+    "comments": {
+      "post_id": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "comment_id": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "parent_id": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "author": {
+        "null_count": 58762,
+        "total": 743126,
+        "null_pct": 7.91,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 19819,
+            "total": 176670,
+            "null_pct": 11.22
+          },
+          "kolkata": {
+            "null_count": 38943,
+            "total": 566456,
+            "null_pct": 6.87
+          }
+        }
+      },
+      "date_posted": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "comment_text": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "score": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "depth": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "is_mod": {
+        "null_count": 240822,
+        "total": 743126,
+        "null_pct": 32.41,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 51596,
+            "total": 176670,
+            "null_pct": 29.2
+          },
+          "kolkata": {
+            "null_count": 189226,
+            "total": 566456,
+            "null_pct": 33.41
+          }
+        }
+      },
+      "is_automod": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "is_deleted": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "is_removed": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "num_replies": {
+        "null_count": 240822,
+        "total": 743126,
+        "null_pct": 32.41,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 51596,
+            "total": 176670,
+            "null_pct": 29.2
+          },
+          "kolkata": {
+            "null_count": 189226,
+            "total": 566456,
+            "null_pct": 33.41
+          }
+        }
+      },
+      "collected_at": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "raw_json_path": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "month": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      },
+      "subreddit": {
+        "null_count": 0,
+        "total": 743126,
+        "null_pct": 0.0,
+        "by_subreddit": {
+          "kolkatacity": {
+            "null_count": 0,
+            "total": 176670,
+            "null_pct": 0.0
+          },
+          "kolkata": {
+            "null_count": 0,
+            "total": 566456,
+            "null_pct": 0.0
+          }
+        }
+      }
+    }
+  },
   "missing_periods": {
     "kolkata": [
       "2025-04 (comments: partial)",
@@ -54,7 +806,9 @@
       "2026-09 (posts: failed)",
       "2026-09 (comments: partial)",
       "2026-10 (posts: never_attempted)",
-      "2026-10 (comments: never_attempted)"
+      "2026-10 (comments: never_attempted)",
+      "2026-11 (posts: never_attempted)",
+      "2026-11 (comments: never_attempted)"
     ],
     "kolkatacity": [
       "2025-04 (comments: partial)",
@@ -77,7 +831,9 @@
       "2026-09 (posts: partial)",
       "2026-09 (comments: partial)",
       "2026-10 (posts: never_attempted)",
-      "2026-10 (comments: never_attempted)"
+      "2026-10 (comments: never_attempted)",
+      "2026-11 (posts: never_attempted)",
+      "2026-11 (comments: never_attempted)"
     ]
   },
   "collection_failures": [
@@ -456,7 +1212,7 @@
   ],
   "data_quality_notes": [
     "kolkata: 1.4% of 91328 posts have null upvote_ratio -- expected for BrightData-sourced raw records (no upvote_ratio key); see README 'Known gaps'.",
-    "kolkata: 21 (month, data_type) period(s) are not fully collected -- see missing_periods.",
-    "kolkatacity: 21 (month, data_type) period(s) are not fully collected -- see missing_periods."
+    "kolkata: 23 (month, data_type) period(s) are not fully collected -- see missing_periods.",
+    "kolkatacity: 23 (month, data_type) period(s) are not fully collected -- see missing_periods."
   ]
 }
