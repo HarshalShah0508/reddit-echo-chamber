@@ -1,12 +1,12 @@
-"""NL -> SQL query interface: Claude writes a read-only DuckDB query against the
+"""NL -> SQL query interface: Gemini writes a read-only DuckDB query against the
 Parquet/CSV data using processed/DUCKDB_SCHEMA.md as schema context, then this
-script validates and runs it. No local LLM, no fine-tuning -- Claude generates
+script validates and runs it. No local LLM, no fine-tuning -- Gemini generates
 the SQL on demand per question.
 
 Usage:
     python -m reddit_kolkata.query_interface "How many posts mention metro per month?"
 
-Requires ANTHROPIC_API_KEY in the environment (or an `ant auth login` profile).
+Requires GEMINI_API_KEY in the environment (project-root .env).
 """
 from __future__ import annotations
 
@@ -15,12 +15,35 @@ import json
 import re
 import sys
 
-import anthropic
+import time
+
 import duckdb
+import httpx
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types as genai_types
 
 from .collection_code import config
 
-MODEL = "claude-opus-5"
+MODEL = "gemini-flash-lite-latest"
+
+# Gemini's free tier has shown frequent transient 503 "high demand" responses and the
+# occasional bare dropped connection (httpx.HTTPError) during testing -- neither is a real
+# rejection of the request, so retry a couple of times before surfacing an error.
+_RETRYABLE_STATUS = (429, 500, 502, 503, 504)
+_MAX_RETRIES = 3
+_RETRY_BACKOFF_S = (2, 5, 10)
+
+# "low" omits thinking_config entirely -- gemini-flash-lite-latest 400s on an explicit
+# thinking_budget=0 (confirmed empirically), so None must mean "don't send the field" not
+# "disable thinking via budget 0".
+_EFFORT_THINKING_BUDGET = {
+    "low": None,
+    "medium": 1024,
+    "high": 4096,
+    "xhigh": 8192,
+    "max": 24576,
+}
 
 _FORBIDDEN_KEYWORDS = re.compile(
     r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|ATTACH|DETACH|COPY|EXPORT|IMPORT"
@@ -29,6 +52,21 @@ _FORBIDDEN_KEYWORDS = re.compile(
 )
 
 SCHEMA_PATH = config.PROCESSED_DIR / "DUCKDB_SCHEMA.md"
+
+_RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "sql": {
+            "type": "string",
+            "description": "A single read-only DuckDB SQL query answering the question.",
+        },
+        "notes": {
+            "type": "string",
+            "description": "Caveats the user should know about this query's result. Empty string if none.",
+        },
+    },
+    "required": ["sql", "notes"],
+}
 
 
 def _connect() -> duckdb.DuckDBPyConnection:
@@ -72,52 +110,45 @@ def _build_system_prompt() -> str:
 
 
 def generate_sql(question: str, effort: str = "low") -> tuple[str, str]:
-    client = anthropic.Anthropic()
-    try:
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=1024,
-            system=[
-                {
-                    "type": "text",
-                    "text": _build_system_prompt(),
-                    "cache_control": {"type": "ephemeral"},
-                }
-            ],
-            output_config={
-                "effort": effort,
-                "format": {
-                    "type": "json_schema",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "sql": {
-                                "type": "string",
-                                "description": "A single read-only DuckDB SQL query answering the question.",
-                            },
-                            "notes": {
-                                "type": "string",
-                                "description": "Caveats the user should know about this query's result. Empty string if none.",
-                            },
-                        },
-                        "required": ["sql", "notes"],
-                        "additionalProperties": False,
-                    },
-                },
-            },
-            messages=[{"role": "user", "content": question}],
-        )
-    except anthropic.RateLimitError as e:
-        raise SystemExit(f"Rate limited: {e}") from e
-    except anthropic.APIConnectionError as e:
-        raise SystemExit(f"Network error reaching Claude API: {e}") from e
-    except anthropic.APIStatusError as e:
-        raise SystemExit(f"Claude API error ({e.status_code}): {e.message}") from e
+    client = genai.Client()
+    budget = _EFFORT_THINKING_BUDGET.get(effort)
+    config_obj = genai_types.GenerateContentConfig(
+        system_instruction=_build_system_prompt(),
+        response_mime_type="application/json",
+        response_schema=_RESPONSE_SCHEMA,
+        thinking_config=genai_types.ThinkingConfig(thinking_budget=budget) if budget else None,
+    )
 
-    if response.stop_reason == "refusal":
-        raise SystemExit("Claude declined to generate SQL for this question.")
+    response = None
+    last_err: Exception | None = None
+    for attempt in range(_MAX_RETRIES + 1):
+        try:
+            response = client.models.generate_content(model=MODEL, contents=question, config=config_obj)
+            last_err = None
+            break
+        except genai_errors.APIError as e:
+            last_err = e
+            if e.code not in _RETRYABLE_STATUS:
+                raise SystemExit(f"Gemini API error ({e.code}): {e}") from e
+        except httpx.HTTPError as e:
+            last_err = e
+        if attempt < _MAX_RETRIES:
+            time.sleep(_RETRY_BACKOFF_S[attempt])
 
-    text = next(block.text for block in response.content if block.type == "text")
+    if last_err is not None:
+        raise SystemExit(f"Gemini API unreachable after {_MAX_RETRIES + 1} attempts: {last_err}") from last_err
+
+    if not response.candidates:
+        reason = getattr(response.prompt_feedback, "block_reason", None)
+        raise SystemExit(f"Gemini declined to generate SQL for this question ({reason}).")
+
+    finish_reason = response.candidates[0].finish_reason
+    if finish_reason is not None and finish_reason.name not in ("STOP", "MAX_TOKENS"):
+        raise SystemExit(f"Gemini declined to generate SQL for this question ({finish_reason.name}).")
+
+    text = response.text
+    if not text:
+        raise SystemExit("Gemini returned an empty response.")
     payload = json.loads(text)
     return payload["sql"], payload["notes"]
 

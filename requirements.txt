@@ -1,7 +1,7 @@
-anthropic==0.125.0
 certifi==2026.7.22
 charset-normalizer==3.4.9
 duckdb==1.4.5
+google-genai==1.47.0
 idna==3.18
 ipykernel==6.31.0
 jupyter==1.1.1
